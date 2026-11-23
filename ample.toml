@@ -1,0 +1,10 @@
+version = 1
+
+[services.vitrine]
+path = "."
+kind = "web"
+runtime = "node"
+template = "node-22"
+start = "node server.js"
+public = true
+target_mode = "included-server"
