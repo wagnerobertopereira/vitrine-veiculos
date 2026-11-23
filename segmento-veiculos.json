@@ -1,0 +1,414 @@
+{
+  "id": "veiculos",
+  "nome": "Carros e motos",
+  "item": {
+    "singular": "veículo",
+    "plural": "veículos",
+    "artigo": "o"
+  },
+  "descricaoCurta": "Carros e motos seminovos",
+  "heroImagem": "img/veiculos/hero.svg",
+  "imagemPadrao": "img/veiculos/sem-foto.svg",
+  "fonteTitulo": "Archivo",
+  "cores": {
+    "principal": "#1d3557",
+    "principalTexto": "#f1f5fa",
+    "destaque": "#d9481e",
+    "destaqueTexto": "#ffffff",
+    "realce": "#f2b134",
+    "fundo": "#f3f5f8",
+    "fundo2": "#e5e9ef",
+    "linha": "#d3d9e1",
+    "texto": "#1b2029",
+    "textoSuave": "#596271"
+  },
+  "tipos": {
+    "carro": {
+      "nome": "Carro",
+      "plural": "Carros",
+      "prefixo": "CR",
+      "icone": "carro"
+    },
+    "moto": {
+      "nome": "Moto",
+      "plural": "Motos",
+      "prefixo": "MT",
+      "icone": "moto"
+    }
+  },
+  "oportunidade": {
+    "rotulo": "Ofertas",
+    "texto": "Abaixo da tabela FIPE",
+    "prefixo": "OF"
+  },
+  "status": {
+    "disponivel": "Disponível",
+    "reservado": "Reservado",
+    "vendido": "Vendido"
+  },
+  "usaBairro": false,
+  "mostrarMapa": false,
+  "tituloExemplo": "Ex.: Onix LT 1.0 Turbo, único dono",
+  "campos": [
+    {
+      "k": "marca",
+      "rotulo": "Marca",
+      "tipo": "texto",
+      "filtro": "select",
+      "lista": [
+        "Chevrolet",
+        "Fiat",
+        "Volkswagen",
+        "Toyota",
+        "Hyundai",
+        "Honda",
+        "Jeep",
+        "Renault",
+        "Nissan",
+        "Ford",
+        "Peugeot",
+        "Citroën",
+        "BYD",
+        "Yamaha",
+        "Suzuki",
+        "Kawasaki",
+        "BMW",
+        "Triumph",
+        "Royal Enfield",
+        "Harley-Davidson"
+      ]
+    },
+    {
+      "k": "modelo",
+      "rotulo": "Modelo",
+      "tipo": "texto",
+      "placeholder": "Ex.: Onix, CG 160"
+    },
+    {
+      "k": "versao",
+      "rotulo": "Versão",
+      "tipo": "texto",
+      "placeholder": "Ex.: LT 1.0 Turbo"
+    },
+    {
+      "k": "ano_fabricacao",
+      "rotulo": "Ano de fabricação",
+      "tipo": "numero"
+    },
+    {
+      "k": "ano",
+      "rotulo": "Ano do modelo",
+      "tipo": "numero",
+      "card": true,
+      "filtro": "min",
+      "filtroRotulo": "Ano a partir de",
+      "filtroOpcoes": [
+        [
+          2024,
+          "2024"
+        ],
+        [
+          2022,
+          "2022"
+        ],
+        [
+          2020,
+          "2020"
+        ],
+        [
+          2018,
+          "2018"
+        ],
+        [
+          2015,
+          "2015"
+        ],
+        [
+          2010,
+          "2010"
+        ]
+      ],
+      "ordem": {
+        "rotulo": "Mais novos",
+        "dir": -1
+      }
+    },
+    {
+      "k": "km",
+      "rotulo": "Quilometragem",
+      "tipo": "numero",
+      "formato": "km",
+      "card": true,
+      "filtro": "max",
+      "filtroRotulo": "Até quantos km",
+      "filtroOpcoes": [
+        [
+          10000,
+          "10 mil km"
+        ],
+        [
+          30000,
+          "30 mil km"
+        ],
+        [
+          50000,
+          "50 mil km"
+        ],
+        [
+          80000,
+          "80 mil km"
+        ],
+        [
+          120000,
+          "120 mil km"
+        ]
+      ],
+      "ordem": {
+        "rotulo": "Menor km",
+        "dir": 1
+      }
+    },
+    {
+      "k": "cambio",
+      "rotulo": "Câmbio",
+      "tipo": "select",
+      "opcoes": {
+        "manual": "Manual",
+        "automatico": "Automático",
+        "cvt": "CVT",
+        "automatizado": "Automatizado"
+      },
+      "tipos": [
+        "carro"
+      ],
+      "card": true,
+      "filtro": "select"
+    },
+    {
+      "k": "combustivel",
+      "rotulo": "Combustível",
+      "tipo": "select",
+      "opcoes": {
+        "flex": "Flex",
+        "gasolina": "Gasolina",
+        "etanol": "Etanol",
+        "diesel": "Diesel",
+        "hibrido": "Híbrido",
+        "eletrico": "Elétrico"
+      },
+      "card": true,
+      "filtro": "select"
+    },
+    {
+      "k": "carroceria",
+      "rotulo": "Carroceria",
+      "tipo": "select",
+      "opcoes": {
+        "hatch": "Hatch",
+        "sedan": "Sedã",
+        "suv": "SUV",
+        "picape": "Picape",
+        "minivan": "Minivan",
+        "utilitario": "Utilitário"
+      },
+      "tipos": [
+        "carro"
+      ],
+      "filtro": "select"
+    },
+    {
+      "k": "estilo",
+      "rotulo": "Estilo",
+      "tipo": "select",
+      "opcoes": {
+        "street": "Street",
+        "trail": "Trail / big trail",
+        "scooter": "Scooter",
+        "esportiva": "Esportiva",
+        "custom": "Custom",
+        "naked": "Naked",
+        "touring": "Touring"
+      },
+      "tipos": [
+        "moto"
+      ],
+      "filtro": "select"
+    },
+    {
+      "k": "cilindrada",
+      "rotulo": "Cilindrada",
+      "tipo": "numero",
+      "formato": "cc",
+      "tipos": [
+        "moto"
+      ],
+      "card": true
+    },
+    {
+      "k": "motor",
+      "rotulo": "Motor",
+      "tipo": "texto",
+      "placeholder": "Ex.: 1.0 Turbo",
+      "tipos": [
+        "carro"
+      ]
+    },
+    {
+      "k": "portas",
+      "rotulo": "Portas",
+      "tipo": "numero",
+      "tipos": [
+        "carro"
+      ]
+    },
+    {
+      "k": "cor",
+      "rotulo": "Cor",
+      "tipo": "texto"
+    },
+    {
+      "k": "final_placa",
+      "rotulo": "Final da placa",
+      "tipo": "texto",
+      "placeholder": "Ex.: 7"
+    },
+    {
+      "k": "unico_dono",
+      "rotulo": "Único dono",
+      "tipo": "bool",
+      "filtro": "check"
+    },
+    {
+      "k": "ipva_pago",
+      "rotulo": "IPVA pago",
+      "tipo": "bool"
+    },
+    {
+      "k": "revisado",
+      "rotulo": "Revisões em dia",
+      "tipo": "bool",
+      "filtro": "check"
+    },
+    {
+      "k": "laudo_cautelar",
+      "rotulo": "Laudo cautelar aprovado",
+      "tipo": "bool",
+      "filtro": "check"
+    },
+    {
+      "k": "garantia",
+      "rotulo": "Garantia",
+      "tipo": "texto",
+      "placeholder": "Ex.: 3 meses motor e câmbio"
+    }
+  ],
+  "extras": {
+    "k": "opcionais",
+    "rotulo": "Opcionais",
+    "comuns": {
+      "carro": [
+        "Ar-condicionado",
+        "Direção elétrica",
+        "Vidros elétricos",
+        "Travas elétricas",
+        "Multimídia",
+        "Câmera de ré",
+        "Sensor de estacionamento",
+        "Bancos de couro",
+        "Rodas de liga leve",
+        "Airbags",
+        "Freios ABS",
+        "Piloto automático",
+        "Teto solar"
+      ],
+      "moto": [
+        "Freios ABS",
+        "Partida elétrica",
+        "Injeção eletrônica",
+        "Painel digital",
+        "Baú",
+        "Protetor de motor",
+        "Manopla aquecida",
+        "Controle de tração"
+      ]
+    }
+  },
+  "condicoes": [
+    {
+      "k": "aceita_financiamento",
+      "rotulo": "Aceita financiamento"
+    },
+    {
+      "k": "aceita_troca",
+      "rotulo": "Aceita troca"
+    }
+  ],
+  "buscaRapida": [
+    "marca",
+    "ano"
+  ],
+  "anuncieCampos": [
+    "marca",
+    "modelo",
+    "ano",
+    "km"
+  ],
+  "textos": {
+    "heroEyebrow": "Seminovos com procedência",
+    "heroTitulo": "Carros e motos revisados, prontos para rodar",
+    "heroLead": "Veículos com laudo cautelar, documentação em dia e condições de financiamento. Fale direto pelo WhatsApp e agende seu test drive.",
+    "acaoPrincipal": "Tenho interesse",
+    "acaoSecundaria": "Agendar test drive",
+    "msgAcaoSecundaria": "Olá! Quero agendar um test drive do veículo [{codigo}] ({titulo}).",
+    "notaDetalhe": "Veículo disponível para ver na loja. Combine o melhor horário pelo WhatsApp.",
+    "rodape": "Carros e motos seminovos com procedência, laudo cautelar e financiamento facilitado.",
+    "anuncieTitulo": "Venda seu carro ou moto",
+    "anuncieTexto": "Três passos rápidos. A gente avalia seu veículo, faz uma proposta ou anuncia para você.",
+    "anuncieDescricao": "Estado geral, revisões, detalhes, se tem multa ou financiamento",
+    "anuncieFotos": "Envie pelo menos 6 fotos: frente, traseira, as duas laterais, painel ligado (mostrando a km) e bancos.",
+    "anunciePerfis": [
+      "Proprietário(a)",
+      "Lojista parceiro",
+      "Quero dar na troca"
+    ],
+    "parceiroEyebrow": "Quer vender ou trocar?",
+    "parceiroTitulo": "Avaliamos seu carro ou moto",
+    "parceiroTexto": "Mande os dados e as fotos do seu veículo. Fazemos uma avaliação justa e você escolhe: vender direto para a loja, anunciar com a gente ou usar como entrada na troca.",
+    "parceiroBotao": "Avaliar meu veículo",
+    "parceiroBeneficios": [
+      "Avaliação rápida pelo WhatsApp",
+      "Pagamento à vista ou como entrada",
+      "Cuidamos da transferência",
+      "Quitamos o financiamento do seu veículo"
+    ],
+    "infoEyebrow": "Por que comprar com a gente",
+    "infoTitulo": "Compra segura, do test drive à transferência",
+    "infoTexto": "Todo veículo passa por vistoria e laudo cautelar antes de entrar no estoque. Você sabe exatamente o que está comprando.",
+    "infoPontos": [
+      [
+        "100%",
+        "dos veículos com laudo cautelar"
+      ],
+      [
+        "Até 60x",
+        "no financiamento, com as principais financeiras"
+      ],
+      [
+        "Troca",
+        "aceitamos seu carro ou moto como entrada"
+      ],
+      [
+        "Garantia",
+        "de motor e câmbio nos seminovos"
+      ]
+    ],
+    "navAnuncie": "Venda seu veículo"
+  },
+  "faixasPreco": [
+    30000,
+    50000,
+    80000,
+    120000,
+    200000
+  ]
+}

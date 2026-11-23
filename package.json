@@ -4,6 +4,11 @@
   "private": true,
   "type": "module",
   "description": "Vitrine de vendas multi-segmento (veículos, imóveis...): troque nome, CNPJ e segmento no painel",
-  "scripts": { "start": "node server.js" },
-  "engines": { "node": ">=22.13" }
+  "scripts": {
+    "build": "node montar.mjs",
+    "start": "node montar.mjs && node server.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
 }

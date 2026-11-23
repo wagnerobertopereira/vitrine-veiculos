@@ -1,0 +1,20 @@
+{
+  "_leia": "Valores iniciais. Depois de publicado, troque tudo pelo painel (#admin > Empresa). O que for salvo no painel vale mais que este arquivo.",
+  "segmento": "veiculos",
+  "empresa": {
+    "nome": "Topper Veículos",
+    "marcaCurta": "Topper",
+    "marcaLinha": "Veículos · Sul de Minas",
+    "razaoSocial": "",
+    "cnpj": "",
+    "registro": "",
+    "whatsapp": "5535900000000",
+    "whatsappExibicao": "(35) 9 0000-0000",
+    "email": "contato@topperveiculos.com.br",
+    "endereco": "",
+    "cidade": "Bueno Brandão",
+    "uf": "MG",
+    "horario": "Seg. a sex. 8h às 18h · Sáb. 8h às 12h"
+  },
+  "cores": {}
+}

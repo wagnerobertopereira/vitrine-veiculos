@@ -1,0 +1,328 @@
+{
+  "id": "imoveis",
+  "nome": "Imóveis",
+  "item": {
+    "singular": "imóvel",
+    "plural": "imóveis",
+    "artigo": "o"
+  },
+  "descricaoCurta": "Casas, terrenos e chácaras",
+  "heroImagem": "img/imoveis/hero.svg",
+  "imagemPadrao": "img/imoveis/hero.svg",
+  "fonteTitulo": "Playfair Display",
+  "cores": {
+    "principal": "#2f4a35",
+    "principalTexto": "#f3efe4",
+    "destaque": "#a5532e",
+    "destaqueTexto": "#ffffff",
+    "realce": "#c99a3c"
+  },
+  "tipos": {
+    "casa": {
+      "nome": "Casa",
+      "plural": "Casas",
+      "prefixo": "CA",
+      "icone": "casa"
+    },
+    "apartamento": {
+      "nome": "Apartamento",
+      "plural": "Apartamentos",
+      "prefixo": "AP",
+      "icone": "predio"
+    },
+    "terreno": {
+      "nome": "Terreno",
+      "plural": "Terrenos",
+      "prefixo": "TE",
+      "icone": "terreno"
+    },
+    "chacara": {
+      "nome": "Chácara",
+      "plural": "Chácaras",
+      "prefixo": "CH",
+      "icone": "chacara"
+    }
+  },
+  "oportunidade": {
+    "rotulo": "Oportunidades",
+    "texto": "Abaixo do mercado",
+    "prefixo": "OP"
+  },
+  "status": {
+    "disponivel": "Disponível",
+    "reservado": "Reservado",
+    "vendido": "Vendido"
+  },
+  "usaBairro": true,
+  "mostrarMapa": true,
+  "tituloExemplo": "Ex.: Casa térrea com quintal perto do centro",
+  "campos": [
+    {
+      "k": "area_total",
+      "rotulo": "Área total",
+      "tipo": "numero",
+      "formato": "area",
+      "card": true,
+      "filtro": "min",
+      "filtroRotulo": "Área mínima",
+      "filtroOpcoes": [
+        [
+          200,
+          "200 m²"
+        ],
+        [
+          360,
+          "360 m²"
+        ],
+        [
+          1000,
+          "1.000 m²"
+        ],
+        [
+          5000,
+          "5.000 m²"
+        ],
+        [
+          10000,
+          "1 hectare"
+        ]
+      ],
+      "ordem": {
+        "rotulo": "Maior área",
+        "dir": -1
+      }
+    },
+    {
+      "k": "area_construida",
+      "rotulo": "Área construída",
+      "tipo": "numero",
+      "formato": "m2",
+      "tipos": [
+        "casa",
+        "apartamento",
+        "chacara"
+      ]
+    },
+    {
+      "k": "quartos",
+      "rotulo": "Quartos",
+      "tipo": "numero",
+      "formato": "quartos",
+      "tipos": [
+        "casa",
+        "apartamento",
+        "chacara"
+      ],
+      "card": true,
+      "filtro": "min",
+      "filtroRotulo": "Quartos (mínimo)",
+      "filtroOpcoes": [
+        [
+          1,
+          "1+"
+        ],
+        [
+          2,
+          "2+"
+        ],
+        [
+          3,
+          "3+"
+        ],
+        [
+          4,
+          "4+"
+        ]
+      ]
+    },
+    {
+      "k": "suites",
+      "rotulo": "Suítes",
+      "tipo": "numero",
+      "tipos": [
+        "casa",
+        "apartamento",
+        "chacara"
+      ]
+    },
+    {
+      "k": "vagas",
+      "rotulo": "Vagas de garagem",
+      "tipo": "numero",
+      "tipos": [
+        "casa",
+        "apartamento",
+        "chacara"
+      ]
+    },
+    {
+      "k": "topografia",
+      "rotulo": "Topografia",
+      "tipo": "select",
+      "opcoes": {
+        "plano": "Plano",
+        "aclive": "Aclive",
+        "declive": "Declive",
+        "misto": "Misto"
+      },
+      "tipos": [
+        "terreno",
+        "chacara"
+      ],
+      "card": true,
+      "filtro": "select"
+    },
+    {
+      "k": "frente",
+      "rotulo": "Frente (m)",
+      "tipo": "numero",
+      "formato": "m",
+      "tipos": [
+        "terreno"
+      ]
+    },
+    {
+      "k": "fundo",
+      "rotulo": "Fundo (m)",
+      "tipo": "numero",
+      "formato": "m",
+      "tipos": [
+        "terreno"
+      ]
+    },
+    {
+      "k": "agua",
+      "rotulo": "Água",
+      "tipo": "texto",
+      "placeholder": "Rede pública, poço, nascente",
+      "tipos": [
+        "terreno",
+        "chacara"
+      ]
+    },
+    {
+      "k": "energia",
+      "rotulo": "Energia",
+      "tipo": "texto",
+      "tipos": [
+        "terreno",
+        "chacara"
+      ]
+    },
+    {
+      "k": "distancia_asfalto",
+      "rotulo": "Distância do asfalto",
+      "tipo": "numero",
+      "formato": "kmdec",
+      "tipos": [
+        "chacara",
+        "terreno"
+      ]
+    },
+    {
+      "k": "documentacao",
+      "rotulo": "Documentação",
+      "tipo": "texto",
+      "placeholder": "Escritura registrada"
+    },
+    {
+      "k": "condominio",
+      "rotulo": "Em condomínio",
+      "tipo": "bool",
+      "filtro": "check"
+    }
+  ],
+  "extras": {
+    "k": "lazer",
+    "rotulo": "Diferenciais",
+    "comuns": [
+      "Piscina",
+      "Churrasqueira",
+      "Área gourmet",
+      "Quintal",
+      "Pomar",
+      "Lago",
+      "Nascente",
+      "Mata nativa",
+      "Portaria 24h",
+      "Elevador",
+      "Academia"
+    ]
+  },
+  "condicoes": [
+    {
+      "k": "aceita_financiamento",
+      "rotulo": "Aceita financiamento"
+    },
+    {
+      "k": "aceita_permuta",
+      "rotulo": "Aceita permuta"
+    }
+  ],
+  "buscaRapida": [
+    "area_total",
+    "quartos"
+  ],
+  "anuncieCampos": [
+    "area_total",
+    "quartos",
+    "documentacao"
+  ],
+  "textos": {
+    "heroEyebrow": "Imóveis selecionados",
+    "heroTitulo": "Encontre o imóvel certo para você",
+    "heroLead": "Casas, apartamentos, terrenos e chácaras com atendimento direto pelo WhatsApp.",
+    "acaoPrincipal": "Quero saber mais",
+    "acaoSecundaria": "Agendar visita",
+    "msgAcaoSecundaria": "Olá! Quero agendar uma visita ao imóvel [{codigo}] ({titulo}).",
+    "notaDetalhe": "O endereço exato é informado na visita.",
+    "rodape": "Imóveis selecionados com atendimento próximo e transparente.",
+    "anuncieTitulo": "Anuncie seu imóvel",
+    "anuncieTexto": "Três passos rápidos. Sem custo para anunciar: a comissão só existe se o imóvel for vendido.",
+    "anuncieDescricao": "Estado, acabamento, lazer, acesso",
+    "anuncieFotos": "Envie pelo menos 5 fotos: fachada, sala, quartos, cozinha e área externa.",
+    "anunciePerfis": [
+      "Proprietário(a)",
+      "Corretor(a)",
+      "Imobiliária parceira"
+    ],
+    "parceiroEyebrow": "Proprietários e corretores",
+    "parceiroTitulo": "Quer vender seu imóvel?",
+    "parceiroTexto": "Divulgamos seu imóvel para compradores da região. Você envia os dados e as fotos, nós cuidamos do anúncio e encaminhamos os interessados.",
+    "parceiroBotao": "Anunciar meu imóvel",
+    "parceiroBeneficios": [
+      "Anúncio com fotos, ficha técnica e código próprio",
+      "Contatos chegam direto pelo WhatsApp",
+      "Sem custo para anunciar. Comissão só na venda"
+    ],
+    "infoEyebrow": "Como trabalhamos",
+    "infoTitulo": "Do primeiro contato à escritura",
+    "infoTexto": "Acompanhamos cada etapa: visita, proposta, financiamento e documentação.",
+    "infoPontos": [
+      [
+        "Visita",
+        "agendada no seu horário"
+      ],
+      [
+        "Proposta",
+        "negociação direta com o proprietário"
+      ],
+      [
+        "Crédito",
+        "ajuda com o financiamento"
+      ],
+      [
+        "Escritura",
+        "documentação conferida"
+      ]
+    ],
+    "navAnuncie": "Anuncie"
+  },
+  "faixasPreco": [
+    150000,
+    300000,
+    500000,
+    800000,
+    1500000
+  ]
+}
