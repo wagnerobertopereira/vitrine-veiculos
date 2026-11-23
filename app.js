@@ -54,8 +54,14 @@ function aplicarTema() {
   const fonte = `--display:"${SEG.fonteTitulo || "Inter"}", system-ui, sans-serif;`;
   let st = $("#tema"); if (!st) { st = document.createElement("style"); st.id = "tema"; document.head.appendChild(st); }
   // Cores da empresa no modo claro; o modo escuro mantém a paleta de contraste do styles.css
-  st.textContent = `:root{${fonte}} @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){${css}}} :root[data-theme="light"]{${css}}`;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", c.principal);
+  const garagem = CFG.visual === "garagem";
+  document.documentElement.dataset.visual = garagem ? "garagem" : "classico";
+  if (garagem) {
+    // Visual "Garagem": sempre escuro, com a cor de destaque da marca em evidência
+    const g = `--bg:#0d0e10;--surface:#16181b;--surface-2:#202328;--fg:#f2f2f0;--muted:#a3a7ad;--line:#2c3036;--mata:${c.destaque};--mata-fg:${c.destaqueTexto};--terra:${c.destaque};--terra-fg:${c.destaqueTexto};--ouro:${c.realce};--display:"Archivo", "Inter", system-ui, sans-serif;color-scheme:dark;`;
+    st.textContent = `:root,:root[data-theme]{${g}}`;
+  } else st.textContent = `:root{${fonte}} @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){${css}}} :root[data-theme="light"]{${css}}`;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", garagem ? "#0d0e10" : c.principal);
 }
 
 // ====== Formatação dos campos da ficha ======
@@ -102,7 +108,7 @@ function LOGO() {
   const letra = esc(((E.marcaCurta || E.nome || "?").trim()[0] || "?").toUpperCase());
   return `<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="var(--mata)"/><rect x="6" y="30" width="28" height="3" rx="1.5" fill="var(--ouro)"/><text x="20" y="26" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="20" fill="var(--mata-fg)">${letra}</text></svg>`;
 }
-const marca = () => `<a class="brand" href="#inicio">${LOGO()}<span><b>${esc(E.marcaCurta || E.nome)}</b><small>${esc(E.marcaLinha || SEG.descricaoCurta)}</small></span></a>`;
+const marca = () => E.logo ? `<a class="brand brand-img" href="#inicio"><img src="${esc(E.logo)}" alt="${esc(E.nome)}"></a>` : `<a class="brand" href="#inicio">${LOGO()}<span><b>${esc(E.marcaCurta || E.nome)}</b><small>${esc(E.marcaLinha || SEG.descricaoCurta)}</small></span></a>`;
 
 // ====== Rotas do catálogo, montadas a partir dos tipos do segmento ======
 function rotasCatalogo() {
@@ -126,7 +132,7 @@ const DB = {
     } catch { /* sem servidor */ }
     if (!c) {
       const base = await (await fetch("config.json")).json(), salva = store.get(CH("config"), {});
-      c = { segmento: salva.segmento || base.segmento, empresa: { ...base.empresa, ...(salva.empresa || {}) }, cores: { ...(base.cores || {}), ...(salva.cores || {}) } };
+      c = { segmento: salva.segmento || base.segmento, visual: salva.visual || base.visual || "classico", empresa: { ...base.empresa, ...(salva.empresa || {}) }, cores: { ...(base.cores || {}), ...(salva.cores || {}) } };
     }
     CFG = c; E = c.empresa;
     SEG = await (await fetch(`segmentos/${encodeURIComponent(c.segmento)}.json`)).json();
@@ -214,7 +220,7 @@ function card(it) {
       <div class="badges"><span class="badge">${esc(tipoNome(it.tipo))}</span>${it.oportunidade ? `<span class="badge op">${esc(SEG.oportunidade?.rotulo?.replace(/s$/, "") || "Oferta")}</span>` : ""}${it.status === "reservado" ? '<span class="badge res">Reservado</span>' : ""}${it.status === "vendido" ? '<span class="badge vend">Vendido</span>' : ""}</div>
       <span class="code">${esc(it.codigo)}</span></div>
     <div class="body">
-      <span class="loc">${I.pin}${local(it)}</span>
+      ${local(it) ? `<span class="loc">${I.pin}${local(it)}</span>` : ""}
       <h3>${esc(it.titulo)}</h3>
       <div class="specs">${specs.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
       <div class="price"><b>${brl(it.preco)}</b>${it.preco_anterior ? `<s>${brl(it.preco_anterior)}</s>` : ""}</div>
@@ -263,7 +269,66 @@ function campoFiltro(c, id, valor) {
 }
 
 // ====== Páginas ======
+function paginaInicioGaragem() {
+  const pub = DB.publicos().filter((i) => i.status !== "vendido");
+  const destaques = pub.filter((i) => i.destaque).slice(0, 7);
+  const comFoto = (i) => i.fotos?.[0] && !/\.svg$/i.test(i.fotos[0]);
+  const capa = destaques.find((i) => i.capa && comFoto(i)) || destaques.find(comFoto);
+  const fundo = capa ? capa.fotos[0] : SEG.heroImagem;
+  const cont = (f) => pub.filter(f).length;
+  const marcas = [...new Set(pub.map((i) => i.marca).filter(Boolean))].sort((x, y) => cont((i) => i.marca === y) - cont((i) => i.marca === x));
+  const rapidos = (SEG.buscaRapida || []).map((k) => SEG.campos.find((c) => c.k === k)).filter(Boolean).slice(0, 2);
+  const pontos = T("infoPontos") || [];
+  const [prim, ...resto] = destaques;
+  return `
+  <section class="g-hero">
+    <img class="g-hero-bg" src="${esc(fundo)}" alt="">
+    <div class="wrap">
+      <div class="g-hero-txt">
+        <span class="g-tag">${esc(T("heroEyebrow"))}${E.cidade ? " · " + esc(E.cidade) : ""}</span>
+        <h1>${esc(T("heroTitulo"))}</h1>
+        <p class="lead">${esc(T("heroLead"))}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-terra" href="#todos">Ver estoque completo</a><a class="btn g-btn-line" href="#anuncie">${esc(T("parceiroBotao") || "Avaliar meu veículo")}</a></div>
+      </div>
+      ${capa ? `<a class="g-capa" href="#${slug(capa.codigo)}"><span>Destaque da semana</span><b>${esc(capa.titulo)}</b><em>${brl(capa.preco)}</em></a>` : ""}
+    </div>
+  </section>
+  <div class="wrap"><form class="quick g-quick" id="buscaRapida">
+    <div class="field"><label for="qTipo">Tipo</label><select class="input" id="qTipo"><option value="">Todos</option>${Object.entries(SEG.tipos).map(([k, t]) => `<option value="${k}">${esc(t.plural)}</option>`).join("")}</select></div>
+    ${rapidos.map((c) => campoFiltro(c, "q_" + c.k, "")).join("")}
+    <div class="field"><label for="qPreco">Até</label><select class="input" id="qPreco"><option value="">Qualquer valor</option>${(SEG.faixasPreco || []).map((v) => `<option value="${v}">${brl(v)}</option>`).join("")}</select></div>
+    <button class="btn btn-terra" type="submit" style="align-self:end">Buscar</button>
+  </form></div>
+
+  <section class="section"><div class="wrap">
+    <div class="g-nums">
+      ${Object.entries(SEG.tipos).map(([k, t]) => `<a href="#${rotaTipo(k)}"><b>${cont((i) => i.tipo === k)}</b><span>${esc(t.plural)} no estoque</span></a>`).join("")}
+      ${SEG.oportunidade ? `<a href="#${rotaOp()}"><b>${cont((i) => i.oportunidade)}</b><span>${esc(SEG.oportunidade.rotulo)} · ${esc(SEG.oportunidade.texto)}</span></a>` : ""}
+    </div>
+    ${marcas.length ? `<div class="g-marcas" aria-label="Marcas no estoque">${marcas.map((m) => `<button type="button" data-marca="${esc(m)}">${esc(m)}</button>`).join("")}</div>` : ""}
+  </div></section>
+
+  <section class="section" style="padding-top:0"><div class="wrap">
+    <div class="section-head"><div><span class="eyebrow">Selecionados</span><h2>Destaques do estoque</h2></div><a class="btn btn-ghost" href="#todos">Todos os ${pub.length} ${esc(ITENS())} →</a></div>
+    ${prim ? `<div class="g-vitrine">${card(prim).replace('class="card"', 'class="card g-grande"')}${resto.map(card).join("")}</div>` : `<p class="muted">Nenhum ${esc(ITEM())} em destaque ainda.</p>`}
+  </div></section>
+
+  ${T("infoTitulo") ? `<section class="section g-faixa"><div class="wrap">
+    <div style="display:grid;gap:12px;max-width:62ch"><span class="eyebrow">${esc(T("infoEyebrow"))}</span><h2>${esc(T("infoTitulo"))}</h2><p>${esc(T("infoTexto"))}</p></div>
+    <ol class="g-passos">${pontos.map(([b, t]) => `<li><b>${esc(b)}</b><span>${esc(t)}</span></li>`).join("")}</ol>
+  </div></section>` : ""}
+
+  <section class="section"><div class="wrap">
+    <div class="g-troca">
+      <div style="display:grid;gap:12px"><span class="eyebrow">${esc(T("parceiroEyebrow"))}</span><h2>${esc(T("parceiroTitulo"))}</h2><p>${esc(T("parceiroTexto"))}</p></div>
+      <ul>${(T("parceiroBeneficios") || []).map((x) => `<li>${I.check}<span>${esc(x)}</span></li>`).join("")}</ul>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn g-btn-escuro" href="#anuncie">${esc(T("parceiroBotao"))}</a><a class="btn g-btn-escuro-line" href="${zapLink(`Olá! Quero avaliar meu veículo com a ${E.nome}.`)}" target="_blank" rel="noopener">Falar no WhatsApp</a></div>
+    </div>
+  </div></section>`;
+}
+
 function paginaInicio() {
+  if (CFG.visual === "garagem") return paginaInicioGaragem();
   const destaques = DB.publicos().filter((i) => i.destaque && i.status !== "vendido").slice(0, 6);
   const cont = (f) => DB.publicos().filter((i) => i.status !== "vendido" && f(i)).length;
   const rapidos = (SEG.buscaRapida || []).map((k) => SEG.campos.find((c) => c.k === k)).filter(Boolean).slice(0, 2);
@@ -425,7 +490,7 @@ function paginaItem(codigo) {
         <div style="display:grid;gap:10px">
           <div class="badges" style="position:static"><span class="badge" style="background:var(--surface-2)">${esc(tipoNome(it.tipo))}</span>${it.oportunidade ? `<span class="badge op">${esc(SEG.oportunidade?.rotulo || "Oferta")}</span>` : ""}<span class="pill ${esc(it.status)}">${esc(SEG.status?.[it.status] || "")}</span></div>
           <h1 style="font-size:clamp(1.7rem,3.6vw,2.5rem)">${esc(it.titulo)}</h1>
-          <span class="loc muted" style="display:flex;gap:6px;align-items:center">${I.pin.replace("<svg", '<svg width="16" height="16"')}${SEG.usaBairro && it.bairro ? esc(it.bairro) + ", " : ""}${esc(it.cidade || E.cidade || "")}${E.uf ? " - " + esc(E.uf) : ""}</span>
+          ${it.cidade || E.cidade ? `<span class="loc muted" style="display:flex;gap:6px;align-items:center">${I.pin.replace("<svg", '<svg width="16" height="16"')}${SEG.usaBairro && it.bairro ? esc(it.bairro) + ", " : ""}${esc(it.cidade || E.cidade || "")}${E.uf ? " - " + esc(E.uf) : ""}</span>` : ""}
         </div>
         ${it.descricao ? `<p style="font-size:1.05rem;max-width:65ch">${esc(it.descricao)}</p>` : ""}
         <div style="display:grid;gap:12px"><h2 style="font-size:1.4rem">Ficha técnica</h2><dl class="ficha" style="margin:0">${ficha.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl></div>
@@ -580,6 +645,12 @@ function formEmpresa() {
     <p class="muted">Tudo que identifica a empresa no site sai daqui. Para usar o sistema em outro negócio, troque o nome, o CNPJ e o segmento e salve.</p>
     <div class="form-grid">
       <div class="field full"><label for="e_segmento">Segmento (o que a empresa vende)</label><select class="input" id="e_segmento">${SEGMENTOS_DISP.map((s) => `<option value="${esc(s.id)}" ${s.id === CFG.segmento ? "selected" : ""}>${esc(s.nome)}</option>`).join("")}</select></div>
+      <div class="field full"><label for="e_visual">Visual do site</label><select class="input" id="e_visual">${[["classico", "Clássico: claro, com faixas e ilustrações"], ["garagem", "Garagem: escuro, foto grande e cor de destaque forte"]].map(([k, t]) => `<option value="${k}" ${(CFG.visual || "classico") === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+      <div class="field full"><label>Logotipo</label><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <span id="logoPrev" style="background:#16181b;border-radius:8px;padding:6px;min-height:56px;display:grid;place-items:center">${E.logo ? `<img src="${esc(E.logo)}" alt="" style="height:44px;width:auto">` : '<span class="muted" style="padding:0 10px;font-size:.85rem">Sem logo (usa a letra)</span>'}</span>
+        <label class="btn btn-ghost btn-sm" style="cursor:pointer">Enviar logo<input type="file" id="logoArq" accept="image/png,image/jpeg,image/webp" hidden></label>
+        <button type="button" class="btn btn-ghost btn-sm" id="logoTirar">Tirar logo</button>
+        <input type="hidden" data-emp="logo" id="e_logo" value="${v("logo")}"></div></div>
       ${f("nome", "Nome da empresa", "required", "full")}
       ${f("cnpj", "CNPJ", 'inputmode="numeric" placeholder="00.000.000/0000-00"')}
       ${f("razaoSocial", "Razão social")}
@@ -603,6 +674,17 @@ function formEmpresa() {
 function ligarEmpresa() {
   const f = $("#formEmpresa"); if (!f) return;
   let semCores = false;
+  $("#logoTirar").addEventListener("click", () => { $("#e_logo").value = ""; $("#logoPrev").innerHTML = '<span class="muted" style="padding:0 10px;font-size:.85rem">Sem logo (usa a letra)</span>'; });
+  $("#logoArq").addEventListener("change", (e) => {
+    const arq = e.target.files[0]; if (!arq) return;
+    if (arq.size > 3e6) return toast("Logo muito grande. Use uma imagem de até 3 MB.");
+    const fr = new FileReader();
+    fr.onload = async () => {
+      try { const url = await DB.subirFoto(fr.result); $("#e_logo").value = url; $("#logoPrev").innerHTML = `<img src="${esc(url)}" alt="" style="height:44px;width:auto">`; }
+      catch (err) { toast(err.message || "Não foi possível enviar o logo."); }
+    };
+    fr.readAsDataURL(arq);
+  });
   $("#e_cnpj").addEventListener("blur", (e) => { e.target.value = formatarCnpj(e.target.value); });
   $("#coresPadrao").addEventListener("click", async () => {
     const seg = await (await fetch(`segmentos/${encodeURIComponent($("#e_segmento").value)}.json`)).json();
@@ -616,10 +698,10 @@ function ligarEmpresa() {
     if (!empresa.nome) return erro("Informe o nome da empresa.");
     if (empresa.cnpj && !cnpjValido(empresa.cnpj)) return erro("Esse CNPJ não é válido. Confira os números.");
     if (empresa.whatsapp && empresa.whatsapp.length < 12) return erro("WhatsApp: use 55 + DDD + número, só os dígitos.");
-    const segmento = $("#e_segmento").value;
+    const segmento = $("#e_segmento").value, visual = $("#e_visual").value;
     const cores = {};
     if (!semCores && segmento === CFG.segmento) f.querySelectorAll("[data-cor]").forEach((el) => { if (el.value.toLowerCase() !== String(SEG.cores[el.dataset.cor] || "").toLowerCase()) cores[el.dataset.cor] = el.value; });
-    try { await DB.salvarConfig({ segmento, empresa, cores }); toast("Empresa salva."); setTimeout(() => location.reload(), 400); }
+    try { await DB.salvarConfig({ segmento, visual, empresa, cores }); toast("Empresa salva."); setTimeout(() => location.reload(), 400); }
     catch (err) { erro(err.message); }
   });
 }
@@ -748,11 +830,14 @@ function render() {
   else if (rota === "admin") { html = paginaAdmin(); depois = ligarAdmin; }
   else {
     html = paginaInicio();
-    depois = () => $("#buscaRapida").addEventListener("submit", (e) => {
-      e.preventDefault(); resetF(); F.tipo = $("#qTipo").value; F.precoMax = $("#qPreco").value;
-      e.target.querySelectorAll("[data-fk]").forEach((el) => { F.c[el.dataset.fk] = el.value; });
-      rotaAnterior = "todos"; location.hash = "todos";
-    });
+    depois = () => {
+      $("#buscaRapida").addEventListener("submit", (e) => {
+        e.preventDefault(); resetF(); F.tipo = $("#qTipo").value; F.precoMax = $("#qPreco").value;
+        e.target.querySelectorAll("[data-fk]").forEach((el) => { F.c[el.dataset.fk] = el.value; });
+        rotaAnterior = "todos"; location.hash = "todos";
+      });
+      document.querySelectorAll("[data-marca]").forEach((b) => b.addEventListener("click", () => { resetF(); F.c.marca = b.dataset.marca; rotaAnterior = "todos"; location.hash = "todos"; }));
+    };
   }
   $("#app").innerHTML = header(rota) + `<main>${html}</main>` + footer() +
     `<a class="zap-float" id="zapFloat" href="${zapLink(`Olá! Vim pelo site da ${E.nome} e gostaria de mais informações.`)}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">${I.zap}</a>`;

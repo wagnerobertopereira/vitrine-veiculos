@@ -68,18 +68,21 @@ const SEGMENTOS = Object.fromEntries(readdirSync(join(PUBLIC, "segmentos")).filt
   .map((f) => JSON.parse(readFileSync(join(PUBLIC, "segmentos", f), "utf8"))).map((s) => [s.id, s]));
 const PADRAO = JSON.parse(readFileSync(join(PUBLIC, "config.json"), "utf8"));
 let SALVA = JSON.parse((await guardar.ler("config.json")) || "{}");
-const CAMPOS_EMPRESA = ["nome", "marcaCurta", "marcaLinha", "razaoSocial", "cnpj", "registro", "whatsapp", "whatsappExibicao", "email", "endereco", "cidade", "uf", "horario", "instagram"];
+const CAMPOS_EMPRESA = ["nome", "marcaCurta", "marcaLinha", "razaoSocial", "cnpj", "registro", "whatsapp", "whatsappExibicao", "email", "endereco", "cidade", "uf", "horario", "instagram", "logo"];
+const VISUAIS = ["classico", "garagem"];
 const CORES = ["principal", "principalTexto", "destaque", "destaqueTexto", "realce"];
 function config() {
   const segmento = SEGMENTOS[SALVA.segmento] ? SALVA.segmento : SEGMENTOS[PADRAO.segmento] ? PADRAO.segmento : Object.keys(SEGMENTOS)[0];
-  return { segmento, empresa: { ...PADRAO.empresa, ...(SALVA.empresa || {}) }, cores: { ...(PADRAO.cores || {}), ...(SALVA.cores || {}) } };
+  return { segmento, visual: VISUAIS.includes(SALVA.visual) ? SALVA.visual : PADRAO.visual || "classico", empresa: { ...PADRAO.empresa, ...(SALVA.empresa || {}) }, cores: { ...(PADRAO.cores || {}), ...(SALVA.cores || {}) } };
 }
 const corSeg = () => { const c = config(); return { ...SEGMENTOS[c.segmento].cores, ...c.cores }; };
 function limparConfig(c) {
   const o = { empresa: {}, cores: {} };
   if (SEGMENTOS[c?.segmento]) o.segmento = c.segmento;
+  if (VISUAIS.includes(c?.visual)) o.visual = c.visual;
   for (const k of CAMPOS_EMPRESA) if (typeof c?.empresa?.[k] === "string") o.empresa[k] = c.empresa[k].trim().slice(0, 200);
   if (o.empresa.cnpj) o.empresa.cnpj = o.empresa.cnpj.replace(/\D/g, "").slice(0, 14);
+  if (o.empresa.logo && !/^(img|uploads)\/[\w.\-/]+\.(png|jpe?g|webp|svg)$/i.test(o.empresa.logo)) delete o.empresa.logo;
   if (o.empresa.whatsapp) o.empresa.whatsapp = o.empresa.whatsapp.replace(/\D/g, "").slice(0, 15);
   for (const k of CORES) if (/^#[0-9a-f]{6}$/i.test(c?.cores?.[k] || "")) o.cores[k] = c.cores[k];
   return o;
@@ -87,7 +90,7 @@ function limparConfig(c) {
 
 // ---- Anúncios ----
 // Cada anúncio guarda o segmento dele; o site mostra só os do segmento ativo.
-const VERSAO_EXEMPLOS = "2026-11-23a";
+const VERSAO_EXEMPLOS = "2026-11-23b";
 let ITENS = JSON.parse((await guardar.ler("itens.json")) || "[]");
 const META = JSON.parse((await guardar.ler("meta.json")) || "{}");
 async function carregarExemplos(seg) {

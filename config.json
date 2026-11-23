@@ -2,19 +2,27 @@
   "_leia": "Valores iniciais. Depois de publicado, troque tudo pelo painel (#admin > Empresa). O que for salvo no painel vale mais que este arquivo.",
   "segmento": "veiculos",
   "empresa": {
-    "nome": "Topper Veículos",
-    "marcaCurta": "Topper",
-    "marcaLinha": "Veículos · Sul de Minas",
+    "nome": "F&F Veículos",
+    "marcaCurta": "F&F",
+    "marcaLinha": "Veículos",
     "razaoSocial": "",
     "cnpj": "",
     "registro": "",
     "whatsapp": "5535900000000",
     "whatsappExibicao": "(35) 9 0000-0000",
-    "email": "contato@topperveiculos.com.br",
+    "email": "",
     "endereco": "",
-    "cidade": "Bueno Brandão",
-    "uf": "MG",
-    "horario": "Seg. a sex. 8h às 18h · Sáb. 8h às 12h"
+    "cidade": "",
+    "uf": "",
+    "horario": "Seg. a sex. 8h às 18h · Sáb. 8h às 13h",
+    "logo": "img/logo.jpg"
   },
-  "cores": {}
+  "cores": {
+    "principal": "#111214",
+    "principalTexto": "#ffffff",
+    "destaque": "#f2c344",
+    "destaqueTexto": "#111214",
+    "realce": "#f2c344"
+  },
+  "visual": "garagem"
 }
