@@ -1,0 +1,9 @@
+{
+  "name": "vitrine-vendas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Vitrine de vendas multi-segmento (veículos, imóveis...): troque nome, CNPJ e segmento no painel",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=22.13" }
+}
